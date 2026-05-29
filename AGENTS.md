@@ -3,11 +3,15 @@
 ## Run
 
 ```bash
-python app.py         # dev server on :5000
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env   # optional: configure PORT
+python app.py          # dev server on :5000 (or $PORT)
 ```
 
 Key runtime deps: `Flask`, `yt-dlp`, `ffmpeg` (must be on `PATH`).
+Python 3.10+.
 No test framework, linting, or CI — zero config for those.
 
 ## Structure
