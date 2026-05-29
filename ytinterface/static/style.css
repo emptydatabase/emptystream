@@ -235,6 +235,7 @@ p {
 }
 
 .video-container {
+    position: relative;
     margin-top: 1rem;
 }
 
@@ -243,6 +244,31 @@ p {
     max-height: 70vh;
     border-radius: 8px;
     background-color: #000;
+    display: block;
+}
+
+.sb-skip-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #00a05c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.15s ease;
+}
+
+.sb-skip-btn:hover {
+    background-color: #00c06e;
+}
+
+.sb-skip-btn.hidden {
+    display: none;
 }
 
 .meta-line {
