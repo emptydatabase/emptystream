@@ -1,6 +1,6 @@
 import logging
 
-from ytinterface import create_app
+from emptystream import create_app
 
 app = create_app()
 

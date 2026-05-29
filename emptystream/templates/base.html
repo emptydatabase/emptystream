@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ytinterface{% endblock %}</title>
+    <title>{% block title %}emptystream{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
 </head>
 <body>
     <header>
         <div class="container">
-            <a href="{{ url_for('index') }}">ytinterface</a>
+            <a href="{{ url_for('index') }}">emptystream</a>
             <form class="search-form" action="{{ url_for('search') }}" method="get">
                 <input type="text" name="q" placeholder="Search YouTube..." value="{{ query if query is defined else '' }}">
                 <button type="submit">Search</button>
@@ -21,7 +21,7 @@
         {% block content %}{% endblock %}
     </main>
     <footer class="footer">
-        <a href="https://github.com/emptydatabase/ytinterface" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/emptydatabase/emptystream" target="_blank" rel="noopener noreferrer">
             Source code on GitHub
         </a>
     </footer>

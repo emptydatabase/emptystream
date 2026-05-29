@@ -1,0 +1,19 @@
+[Unit]
+Description=emptystream - Multi-service media frontend
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=emptystream
+Group=emptystream
+WorkingDirectory=/opt/emptystream
+Environment=PATH=/opt/emptystream/.venv/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/opt/emptystream/.venv/bin/python app.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

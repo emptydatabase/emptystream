@@ -1,6 +1,6 @@
-# ytinterface
+# emptystream
 
-YouTube frontend. Search for videos and stream them directly.
+Multi-service media frontend. Search for videos from supported services and stream them directly.
 
 ## Requirements
 
@@ -27,24 +27,24 @@ Open http://localhost:5000.
 
 ```bash
 # Create unprivileged system user
-sudo useradd -r -s /usr/bin/nologin ytinterface
+sudo useradd -r -s /usr/bin/nologin emptystream
 
-# Install app to /opt/ytinterface
-sudo mkdir -p /opt/ytinterface
-sudo cp -r . .venv /opt/ytinterface
-sudo chown -R ytinterface:ytinterface /opt/ytinterface
+# Install app to /opt/emptystream
+sudo mkdir -p /opt/emptystream
+sudo cp -r . .venv /opt/emptystream
+sudo chown -R emptystream:emptystream /opt/emptystream
 
 # Install and start the service
-sudo cp ytinterface.service /etc/systemd/system/
+sudo cp emptystream.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable --now ytinterface
+sudo systemctl enable --now emptystream
 ```
 
-The service runs on `http://localhost:5000`. Check logs with `journalctl -u ytinterface -f`.
+The service runs on `http://localhost:5000`. Check logs with `journalctl -u emptystream -f`.
 
 ## How it works
 
-1. **Search** — queries YouTube via yt-dlp, returns thumbnail/title/channel/duration
+1. **Search** — queries the media service via yt-dlp, returns thumbnail/title/channel/duration
 2. **Watch** — shows video metadata and a `<video>` player
 3. **Stream** — yt-dlp fetches DASH video+audio URLs, ffmpeg merges them into a fragmented MP4 on-the-fly
 4. **SponsorBlock** — skip segments (sponsors, intros, etc.) are fetched from sponsor.ajay.app and applied client-side
