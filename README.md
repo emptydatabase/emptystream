@@ -28,3 +28,4 @@ Open http://localhost:5000.
 1. **Search** — queries YouTube via yt-dlp, returns thumbnail/title/channel/duration
 2. **Watch** — shows video metadata and a `<video>` player
 3. **Stream** — yt-dlp fetches DASH video+audio URLs, ffmpeg merges them into a fragmented MP4 on-the-fly
+4. **SponsorBlock** — skip segments (sponsors, intros, etc.) are fetched from sponsor.ajay.app and applied client-side

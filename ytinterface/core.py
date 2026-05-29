@@ -1,3 +1,7 @@
+import json
+import urllib.error
+import urllib.parse
+import urllib.request
 from typing import Any
 
 from yt_dlp import YoutubeDL
@@ -27,7 +31,7 @@ def search_videos(query: str, start: int, end: int):
     return results
 
 
-def get_video_info(video_id: str):
+def get_video_info(video_id: str) -> dict[str, Any]:
     ydl_opts = {
         "quiet": True,
         "no_warnings": True,
@@ -63,3 +67,27 @@ def _format_duration(seconds: Any) -> str:
     if h:
         return f"{h}:{m:02d}:{s:02d}"
     return f"{m}:{s:02d}"
+
+
+SB_API = "https://sponsor.ajay.app/api/skipSegments"
+SB_CATEGORIES = [
+    "sponsor", "intro", "outro", "interaction",
+    "selfpromo", "preview", "music_offtopic", "filler",
+]
+
+
+def get_sponsorblock_segments(video_id: str) -> list[dict]:
+    params = urllib.parse.urlencode([
+        ("videoID", video_id),
+        ("categories", json.dumps(SB_CATEGORIES)),
+    ])
+    url = f"{SB_API}?{params}"
+    try:
+        with urllib.request.urlopen(url, timeout=10) as resp:
+            data = json.loads(resp.read())
+    except (urllib.error.HTTPError, urllib.error.URLError, json.JSONDecodeError, OSError):
+        return []
+    return [
+        {"start": seg["segment"][0], "end": seg["segment"][1], "category": seg["category"]}
+        for seg in data
+    ]
