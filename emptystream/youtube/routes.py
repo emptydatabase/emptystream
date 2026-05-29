@@ -29,19 +29,19 @@ def search():
     query = request.args.get("q", "")
     page = request.args.get("page", 1, type=int)
     if not query:
-        return render_template("search.html")
+        return render_template("youtube/search.html")
     else:
         try:
             results = youtube_search_videos(query, (page - 1) * PER_PAGE, page * PER_PAGE)
         except Exception as exc:
             return render_template(
-                "search.html",
+                "youtube/search.html",
                 query=query,
                 error=str(exc),
             )
         else:
             return render_template(
-                "search.html",
+                "youtube/search.html",
                 query=query,
                 results=results,
                 page=page,
@@ -52,7 +52,7 @@ def search():
 def watch():
     video_id = request.args.get("v", "")
     if not video_id:
-        return render_template("watch.html")
+        return render_template("youtube/watch.html")
     with ThreadPoolExecutor() as executor:
         info_future = executor.submit(youtube_get_info, video_id)
         sb_segments_future = executor.submit(sponsorblock_get_segments, video_id)
@@ -61,13 +61,13 @@ def watch():
         sb_segments = sb_segments_future.result()
     except Exception as exc:
         return render_template(
-            "watch.html",
+            "youtube/watch.html",
             video_id=video_id,
             error=str(exc),
         )
     else:
         return render_template(
-            "watch.html",
+            "youtube/watch.html",
             video_id=video_id,
             title=info.get("title"),
             channel=info.get("channel"),

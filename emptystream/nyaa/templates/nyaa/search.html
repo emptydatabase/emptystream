@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}emptystream — Nyaa Search{% endblock %}
+
+{% block content %}
+{% if query %}
+    <h2>Results for "{{ query }}"</h2>
+{% else %}
+    <h2>Search Nyaa</h2>
+{% endif %}
+
+{% if error %}
+    <p class="error">An error occurred: {{ error }}</p>
+{% elif results %}
+    <div class="torrent-table-wrapper">
+        <table class="torrent-table">
+            <thead>
+                <tr>
+                    <th class="col-category">Category</th>
+                    <th class="col-name">Name</th>
+                    <th class="col-size">Size</th>
+                    <th class="col-date">Date</th>
+                    <th class="col-seeders">
+                        {% if sort == 'seeders' %}
+                            Seeders &#9660;
+                        {% else %}
+                            <a href="{{ url_for('nyaa.search', q=query, page=page, category=category, sort='seeders') }}">Seeders</a>
+                        {% endif %}
+                    </th>
+                    <th class="col-leechers">Leechers</th>
+                    <th class="col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in results %}
+                <tr class="torrent-row">
+                    <td class="col-category" title="{{ t.category }}"><img src="{{ url_for('nyaa.static', filename=category_icons[t.category[0]]) }}" alt="" width="16" height="16"></td>
+                    <td class="col-name">{{ t.name }}</td>
+                    <td class="col-size">{{ t.size }}</td>
+                    <td class="col-date">{{ t.date }}</td>
+                    <td class="col-seeders">{{ t.seeders }}</td>
+                    <td class="col-leechers">{{ t.leechers }}</td>
+                    <td class="col-actions">
+                        <a href="{{ url_for('nyaa.view', torrent_id=t.id) }}" class="action-btn">View</a>
+                        <a href="{{ url_for('nyaa.download', torrent_id=t.id) }}" class="action-btn download-btn">Download</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <nav class="pagination">
+        {% if page > 1 %}
+            <a href="{{ url_for('nyaa.search', q=query, page=page-1, category=category, sort=sort) }}" class="page-link">Previous</a>
+        {% endif %}
+        <span class="page-info">Page {{ page }}</span>
+        <a href="{{ url_for('nyaa.search', q=query, page=page+1, category=category, sort=sort) }}" class="page-link">Next</a>
+    </nav>
+{% elif query and not error %}
+    <p class="placeholder">No results found for "{{ query }}".</p>
+{% else %}
+    <p class="placeholder">Enter a search term above to find torrents.</p>
+{% endif %}
+{% endblock %}

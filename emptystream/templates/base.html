@@ -20,6 +20,16 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <select name="category" class="category-select hidden">
+                        <option value="" {{ 'selected' if category is defined and (not category or category == '0_0') }}>All Categories</option>
+                        {% for group_label, items in category_groups.items() %}
+                        <optgroup label="{{ group_label }}">
+                            {% for value, label in items.items() %}
+                            <option value="{{ value }}" {{ 'selected' if category is defined and category == value }}>{{ label }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        {% endfor %}
+                    </select>
                     <input type="text" name="q" placeholder="Search..." value="{{ query if query is defined else '' }}">
                 </div>
                 <button type="submit">Search</button>
@@ -34,5 +44,20 @@
             Source code on GitHub
         </a>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var serviceSelect = document.querySelector('.service-select select');
+            var categorySelect = document.querySelector('.category-select');
+            function toggleCategory() {
+                if (serviceSelect.value === 'nyaa') {
+                    categorySelect.classList.remove('hidden');
+                } else {
+                    categorySelect.classList.add('hidden');
+                }
+            }
+            serviceSelect.addEventListener('change', toggleCategory);
+            toggleCategory();
+        });
+    </script>
 </body>
 </html>

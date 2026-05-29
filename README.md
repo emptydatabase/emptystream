@@ -1,6 +1,6 @@
 # emptystream
 
-YouTube media frontend. Search for videos and stream them directly via yt-dlp + ffmpeg.
+Multi-service media frontend. Search YouTube via yt-dlp (stream directly) and browse Nyaa torrents.
 
 ## Requirements
 
@@ -13,6 +13,7 @@ YouTube media frontend. Search for videos and stream them directly via yt-dlp + 
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env   # optional: PORT override
 ```
 
 ## Run
@@ -23,28 +24,29 @@ python app.py
 
 Open http://localhost:5000.
 
+## Services
+
+| Service | Route | Status |
+|---|---|---|
+| **YouTube** | `/youtube/search?q=` | Search, watch, and stream videos via yt-dlp + ffmpeg |
+| **Nyaa** | `/nyaa/search?q=&category=&sort=` | Browse torrents (stub data; backend not yet implemented) |
+
 ## Deploy as a systemd service
 
 ```bash
-# Create unprivileged system user
 sudo useradd -r -s /usr/bin/nologin emptystream
-
-# Install app to /opt/emptystream
 sudo mkdir -p /opt/emptystream
 sudo cp -r . .venv /opt/emptystream
 sudo chown -R emptystream:emptystream /opt/emptystream
-
-# Install and start the service
 sudo cp emptystream.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now emptystream
 ```
 
-The service runs on `http://localhost:5000`. Check logs with `journalctl -u emptystream -f`.
+Logs: `journalctl -u emptystream -f`.
 
-## How it works
+## How YouTube works
 
-1. **Search** — queries YouTube via yt-dlp, returns thumbnail/title/channel/duration
-2. **Watch** — shows video metadata and a `<video>` player
-3. **Stream** — yt-dlp fetches DASH video+audio URLs, ffmpeg merges them into a fragmented MP4 on-the-fly
-4. **SponsorBlock** — skip segments (sponsors, intros, etc.) are fetched from sponsor.ajay.app and applied client-side
+1. **Search** — queries YouTube via yt-dlp (`extract_flat='in_playlist'`), returns thumbnail/title/channel/duration
+2. **Watch** — shows video metadata and a `<video>` player; fetches SponsorBlock segments in parallel
+3. **Stream** — yt-dlp extracts DASH video+audio URLs, ffmpeg merges them into a fragmented MP4 on-the-fly (`-c copy -movflags frag_keyframe+empty_moov -f mp4 pipe:1`)
