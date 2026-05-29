@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}ytinterface — Search{% endblock %}
+
+{% block content %}
+{% if query %}
+    <h2>Results for "{{ query }}"</h2>
+{% else %}
+    <h2>Search</h2>
+{% endif %}
+
+{% if error %}
+    <p class="error">An error occurred: {{ error }}</p>
+{% elif results %}
+    <div class="results-grid">
+        {% for video in results %}
+            <a class="video-card" href="{{ url_for('watch', v=video.id) }}">
+                <div class="thumbnail">
+                    <img src="{{ video.thumbnail }}" alt="{{ video.title }}" loading="lazy">
+                    {% if video.duration %}
+                        <span class="duration">{{ video.duration }}</span>
+                    {% endif %}
+                </div>
+                <div class="card-info">
+                    <h3 class="card-title">{{ video.title }}</h3>
+                    <p class="card-channel">{{ video.channel }}</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+    <nav class="pagination">
+        {% if page > 1 %}
+            <a href="{{ url_for('search', q=query, page=page-1) }}" class="page-link">Previous</a>
+        {% endif %}
+        <span class="page-info">Page {{ page }}</span>
+        <a href="{{ url_for('search', q=query, page=page+1) }}" class="page-link">Next</a>
+    </nav>
+{% elif query and not error %}
+    <p class="placeholder">No results found for "{{ query }}".</p>
+{% else %}
+    <p class="placeholder">Enter a search term above to find videos.</p>
+{% endif %}
+{% endblock %}
