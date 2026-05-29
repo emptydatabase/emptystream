@@ -29,7 +29,7 @@ Open http://localhost:5000.
 | Service | Route | Status |
 |---|---|---|
 | **YouTube** | `/youtube/search?q=` | Search, watch, and stream videos via yt-dlp + ffmpeg |
-| **Nyaa** | `/nyaa/search?q=&category=&sort=` | Browse torrents (stub data; backend not yet implemented) |
+| **Nyaa** | `/nyaa/search?q=&category=&sort=` | Search and download `.torrent` files via nyaa.si RSS |
 
 ## Deploy as a systemd service
 

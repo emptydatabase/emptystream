@@ -2,7 +2,7 @@ import json
 import urllib.error
 from unittest.mock import MagicMock, patch
 
-from emptystream.youtube.functions import (
+from emptystream.services.youtube import (
     sponsorblock_get_segments,
     youtube_get_info,
     youtube_get_stream_urls,
@@ -12,7 +12,7 @@ from emptystream.youtube.functions import (
 
 # ── youtube_search_videos ──────────────────────────────────────
 
-PATCH_TARGET = "emptystream.youtube.functions.YoutubeDL"
+PATCH_TARGET = "emptystream.services.youtube.functions.YoutubeDL"
 
 
 @patch(PATCH_TARGET)

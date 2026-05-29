@@ -11,14 +11,14 @@ def test_index_returns_200(client):
 
 # ── search ─────────────────────────────────────────────────────
 
-@patch("emptystream.youtube.routes.youtube_search_videos")
+@patch("emptystream.services.youtube.routes.youtube_search_videos")
 def test_search_no_query(mock_search, client):
     resp = client.get("/youtube/search")
     assert resp.status_code == 200
     assert mock_search.call_count == 0
 
 
-@patch("emptystream.youtube.routes.youtube_search_videos")
+@patch("emptystream.services.youtube.routes.youtube_search_videos")
 def test_search_with_query(mock_search, client):
     mock_search.return_value = [
         {
@@ -35,14 +35,14 @@ def test_search_with_query(mock_search, client):
     mock_search.assert_called_once_with("test query", 0, 9)
 
 
-@patch("emptystream.youtube.routes.youtube_search_videos")
+@patch("emptystream.services.youtube.routes.youtube_search_videos")
 def test_search_pagination_page_2(mock_search, client):
     mock_search.return_value = []
     client.get("/youtube/search?q=test&page=2")
     mock_search.assert_called_once_with("test", 9, 18)
 
 
-@patch("emptystream.youtube.routes.youtube_search_videos")
+@patch("emptystream.services.youtube.routes.youtube_search_videos")
 def test_search_with_query_error(mock_search, client):
     mock_search.side_effect = Exception("API error")
     resp = client.get("/youtube/search?q=test")
@@ -52,8 +52,8 @@ def test_search_with_query_error(mock_search, client):
 
 # ── watch ──────────────────────────────────────────────────────
 
-@patch("emptystream.youtube.routes.sponsorblock_get_segments")
-@patch("emptystream.youtube.routes.youtube_get_info")
+@patch("emptystream.services.youtube.routes.sponsorblock_get_segments")
+@patch("emptystream.services.youtube.routes.youtube_get_info")
 def test_watch_no_video_id(mock_info, mock_sb, client):
     resp = client.get("/youtube/watch")
     assert resp.status_code == 200
@@ -61,8 +61,8 @@ def test_watch_no_video_id(mock_info, mock_sb, client):
     assert mock_info.call_count == 0
 
 
-@patch("emptystream.youtube.routes.sponsorblock_get_segments")
-@patch("emptystream.youtube.routes.youtube_get_info")
+@patch("emptystream.services.youtube.routes.sponsorblock_get_segments")
+@patch("emptystream.services.youtube.routes.youtube_get_info")
 def test_watch_with_video_id(mock_info, mock_sb, client):
     mock_info.return_value = {"title": "My Video", "channel": "My Chan", "duration": "3:00"}
     mock_sb.return_value = [{"start": 10.0, "end": 20.0, "category": "sponsor"}]
@@ -75,8 +75,8 @@ def test_watch_with_video_id(mock_info, mock_sb, client):
     mock_sb.assert_called_once_with("abc123")
 
 
-@patch("emptystream.youtube.routes.sponsorblock_get_segments")
-@patch("emptystream.youtube.routes.youtube_get_info")
+@patch("emptystream.services.youtube.routes.sponsorblock_get_segments")
+@patch("emptystream.services.youtube.routes.youtube_get_info")
 def test_watch_with_info_error(mock_info, mock_sb, client):
     mock_info.side_effect = Exception("fetch failed")
     resp = client.get("/youtube/watch?v=abc123")
@@ -86,8 +86,8 @@ def test_watch_with_info_error(mock_info, mock_sb, client):
 
 # ── stream ─────────────────────────────────────────────────────
 
-@patch("emptystream.youtube.routes.subprocess.Popen")
-@patch("emptystream.youtube.routes.youtube_get_stream_urls")
+@patch("emptystream.services.youtube.routes.subprocess.Popen")
+@patch("emptystream.services.youtube.routes.youtube_get_stream_urls")
 def test_stream_success(mock_get_urls, mock_popen, client):
     mock_get_urls.return_value = ("https://vid.url", "https://aud.url")
     mock_proc = MagicMock()
@@ -101,7 +101,7 @@ def test_stream_success(mock_get_urls, mock_popen, client):
     mock_proc.wait.assert_called_once()
 
 
-@patch("emptystream.youtube.routes.youtube_get_stream_urls")
+@patch("emptystream.services.youtube.routes.youtube_get_stream_urls")
 def test_stream_bad_id_returns_404(mock_get_urls, client):
     mock_get_urls.side_effect = Exception("not found")
     resp = client.get("/youtube/stream/badid")
@@ -145,3 +145,43 @@ def test_redirect_search_bad_service(client):
 def test_unknown_route_returns_404(client):
     resp = client.get("/nonexistent")
     assert resp.status_code == 404
+
+
+# ── Nyaa search ──────────────────────────────────────────────────
+
+@patch("emptystream.services.nyaa.routes.nyaa_search_videos")
+def test_nyaa_search_no_query(mock_search, client):
+    resp = client.get("/nyaa/search")
+    assert resp.status_code == 200
+    assert b"Search Nyaa" in resp.data
+    assert mock_search.call_count == 0
+
+
+@patch("emptystream.services.nyaa.routes.nyaa_search_videos")
+def test_nyaa_search_with_query(mock_search, client):
+    mock_search.return_value = [
+        {"id": 1, "name": "Torrent One", "category": "1_2", "size": "1 GiB", "date": "2026-03-15", "seeders": 100, "leechers": 5}
+    ]
+    resp = client.get("/nyaa/search?q=test")
+    assert resp.status_code == 200
+    assert b"Torrent One" in resp.data
+    mock_search.assert_called_once_with("test", "0_0", "seeders")
+
+
+@patch("emptystream.services.nyaa.routes.nyaa_search_videos")
+def test_nyaa_search_error(mock_search, client):
+    mock_search.side_effect = Exception("upstream error")
+    resp = client.get("/nyaa/search?q=test")
+    assert resp.status_code == 200
+    assert b"upstream error" in resp.data
+
+
+# ── Nyaa download ────────────────────────────────────────────────
+
+@patch("emptystream.services.nyaa.routes.nyaa_get_download_url")
+def test_nyaa_download(mock_url, client):
+    mock_url.return_value = "https://nyaa.si/download/54321.torrent"
+    resp = client.get("/nyaa/download/54321")
+    assert resp.status_code == 302
+    assert resp.headers["Location"] == "https://nyaa.si/download/54321.torrent"
+    mock_url.assert_called_once_with(54321)

@@ -1,3 +1,9 @@
+from .functions import (
+    sponsorblock_get_segments,
+    youtube_get_info,
+    youtube_get_stream_urls,
+    youtube_search_videos,
+)
 from .routes import youtube_bp
 from ..service import Service
 

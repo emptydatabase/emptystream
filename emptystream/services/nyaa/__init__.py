@@ -1,6 +1,6 @@
 from flask import Flask
 
-from .functions import CATEGORY_GROUPS
+from .functions import CATEGORY_GROUPS, nyaa_get_download_url, nyaa_search_videos
 from .routes import nyaa_bp
 from ..service import Service
 

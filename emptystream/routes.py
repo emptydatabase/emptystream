@@ -1,7 +1,7 @@
 from flask import Flask, abort, redirect, render_template, request, url_for
 
-from .youtube import YoutubeService
-from .nyaa import NyaaService
+from .services.youtube import YoutubeService
+from .services.nyaa import NyaaService
 
 app = Flask(__name__)
 

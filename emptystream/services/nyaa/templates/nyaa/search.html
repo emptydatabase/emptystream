@@ -41,7 +41,6 @@
                     <td class="col-seeders">{{ t.seeders }}</td>
                     <td class="col-leechers">{{ t.leechers }}</td>
                     <td class="col-actions">
-                        <a href="{{ url_for('nyaa.view', torrent_id=t.id) }}" class="action-btn">View</a>
                         <a href="{{ url_for('nyaa.download', torrent_id=t.id) }}" class="action-btn download-btn">Download</a>
                     </td>
                 </tr>

@@ -6,7 +6,7 @@ from typing import Any
 
 from yt_dlp import YoutubeDL
 
-from ..utils import _format_duration
+from emptystream.utils import _format_duration
 
 
 def youtube_search_videos(query: str, start: int, end: int):
