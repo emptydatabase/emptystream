@@ -7,17 +7,17 @@
     <div class="error-message">
         <h2>{{ error }}</h2>
         <p>Try searching for a different video.</p>
-        <p><a href="{{ url_for('search') }}">Back to search</a></p>
+        <p><a href="{{ url_for('youtube.search') }}">Back to search</a></p>
     </div>
 {% elif video_id %}
     <h2>{{ title }}</h2>
     <p class="meta-line">{{ channel }}{% if duration %} · {{ duration }}{% endif %}</p>
     <div class="video-container">
-        <video controls src="{{ url_for('stream', video_id=video_id) }}"></video>
+        <video controls src="{{ url_for('youtube.stream', video_id=video_id) }}"></video>
     </div>
     {% if sponsorblock_segments %}
         <script>window.SB_SEGMENTS = {{ sponsorblock_segments|safe }};</script>
-        <script src="{{ url_for('static', filename='sponsorblock.js') }}"></script>
+        <script src="{{ url_for('youtube.static', filename='sponsorblock.js') }}"></script>
     {% endif %}
 {% else %}
     <div class="error-message">

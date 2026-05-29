@@ -14,7 +14,7 @@
 {% elif results %}
     <div class="results-grid">
         {% for video in results %}
-            <a class="video-card" href="{{ url_for('watch', v=video.id) }}">
+            <a class="video-card" href="{{ url_for('youtube.watch', v=video.id) }}">
                 <div class="thumbnail">
                     <img src="{{ video.thumbnail }}" alt="{{ video.title }}" loading="lazy">
                     {% if video.duration %}
@@ -31,10 +31,10 @@
 
     <nav class="pagination">
         {% if page > 1 %}
-            <a href="{{ url_for('search', q=query, page=page-1) }}" class="page-link">Previous</a>
+            <a href="{{ url_for('youtube.search', q=query, page=page-1) }}" class="page-link">Previous</a>
         {% endif %}
         <span class="page-info">Page {{ page }}</span>
-        <a href="{{ url_for('search', q=query, page=page+1) }}" class="page-link">Next</a>
+        <a href="{{ url_for('youtube.search', q=query, page=page+1) }}" class="page-link">Next</a>
     </nav>
 {% elif query and not error %}
     <p class="placeholder">No results found for "{{ query }}".</p>

@@ -1,6 +1,6 @@
 # emptystream
 
-Multi-service media frontend. Search for videos from supported services and stream them directly.
+YouTube media frontend. Search for videos and stream them directly via yt-dlp + ffmpeg.
 
 ## Requirements
 
@@ -44,7 +44,7 @@ The service runs on `http://localhost:5000`. Check logs with `journalctl -u empt
 
 ## How it works
 
-1. **Search** — queries the media service via yt-dlp, returns thumbnail/title/channel/duration
+1. **Search** — queries YouTube via yt-dlp, returns thumbnail/title/channel/duration
 2. **Watch** — shows video metadata and a `<video>` player
 3. **Stream** — yt-dlp fetches DASH video+audio URLs, ffmpeg merges them into a fragmented MP4 on-the-fly
 4. **SponsorBlock** — skip segments (sponsors, intros, etc.) are fetched from sponsor.ajay.app and applied client-side

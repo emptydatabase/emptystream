@@ -6,8 +6,10 @@ from typing import Any
 
 from yt_dlp import YoutubeDL
 
+from ..utils import _format_duration
 
-def search_videos(query: str, start: int, end: int):
+
+def youtube_search_videos(query: str, start: int, end: int):
     ydl_opts = {
         "quiet": True,
         "no_warnings": True,
@@ -31,7 +33,7 @@ def search_videos(query: str, start: int, end: int):
     return results
 
 
-def get_video_info(video_id: str) -> dict[str, Any]:
+def youtube_get_info(video_id: str) -> dict[str, Any]:
     ydl_opts = {
         "quiet": True,
         "no_warnings": True,
@@ -45,7 +47,7 @@ def get_video_info(video_id: str) -> dict[str, Any]:
     }
 
 
-def get_stream_urls(video_id: str) -> tuple[str, str]:
+def youtube_get_stream_urls(video_id: str) -> tuple[str, str]:
     ydl_opts = {
         "quiet": True,
         "no_warnings": True,
@@ -57,18 +59,6 @@ def get_stream_urls(video_id: str) -> tuple[str, str]:
     return req[0]["url"], req[1]["url"]
 
 
-def _format_duration(seconds: Any) -> str:
-    if not seconds:
-        return ""
-    seconds = int(seconds)
-    h = seconds // 3600
-    m = (seconds % 3600) // 60
-    s = seconds % 60
-    if h:
-        return f"{h}:{m:02d}:{s:02d}"
-    return f"{m}:{s:02d}"
-
-
 SB_API = "https://sponsor.ajay.app/api/skipSegments"
 SB_CATEGORIES = [
     "sponsor", "intro", "outro", "interaction",
@@ -76,7 +66,7 @@ SB_CATEGORIES = [
 ]
 
 
-def get_sponsorblock_segments(video_id: str) -> list[dict]:
+def sponsorblock_get_segments(video_id: str) -> list[dict]:
     params = urllib.parse.urlencode([
         ("videoID", video_id),
         ("categories", json.dumps(SB_CATEGORIES)),
