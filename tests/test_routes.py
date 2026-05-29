@@ -121,6 +121,25 @@ def test_serves_style_css(client):
     assert resp.status_code == 200
 
 
+# ── redirect /search ──────────────────────────────────────────
+
+def test_redirect_search_youtube(client):
+    resp = client.get("/search?q=cats&service=youtube")
+    assert resp.status_code == 302
+    assert resp.headers["Location"] == "/youtube/search?q=cats"
+
+
+def test_redirect_search_no_query(client):
+    resp = client.get("/search")
+    assert resp.status_code == 302
+    assert resp.headers["Location"] == "/"
+
+
+def test_redirect_search_bad_service(client):
+    resp = client.get("/search?q=cats&service=bad")
+    assert resp.status_code == 404
+
+
 # ── 404 ────────────────────────────────────────────────────────
 
 def test_unknown_route_returns_404(client):

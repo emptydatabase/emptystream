@@ -11,8 +11,17 @@
     <header>
         <div class="container">
             <a href="{{ url_for('index') }}">emptystream</a>
-            <form class="search-form" action="{{ url_for('youtube.search') }}" method="get">
-                <input type="text" name="q" placeholder="Search YouTube..." value="{{ query if query is defined else '' }}">
+            <form class="search-form" action="{{ url_for('search') }}" method="get">
+                <div class="search-bar">
+                    <div class="service-select">
+                        <select name="service">
+                            {% for key, label in services.items() %}
+                            <option value="{{ key }}" {{ 'selected' if current_service == key }}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="text" name="q" placeholder="Search..." value="{{ query if query is defined else '' }}">
+                </div>
                 <button type="submit">Search</button>
             </form>
         </div>

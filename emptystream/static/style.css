@@ -52,19 +52,41 @@ header a:hover {
     gap: 0.5rem;
 }
 
-.search-form input[type="text"] {
+.search-bar {
+    display: flex;
     flex: 1;
-    padding: 0.5rem 0.75rem;
     border: 1px solid #444;
     border-radius: 4px;
+    overflow: hidden;
     background-color: #2a2a2a;
+}
+
+.search-bar:focus-within {
+    border-color: #4ea8de;
+}
+
+.service-select select {
+    padding: 0.5rem;
+    border: none;
+    border-right: 1px solid #444;
+    border-radius: 0;
+    background: transparent;
     color: #e0e0e0;
     font-size: 1rem;
     outline: none;
+    cursor: pointer;
+    height: 100%;
 }
 
-.search-form input[type="text"]:focus {
-    border-color: #4ea8de;
+.search-bar input[type="text"] {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: #e0e0e0;
+    font-size: 1rem;
+    outline: none;
 }
 
 .search-form button {
