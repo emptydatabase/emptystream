@@ -10,7 +10,7 @@ python app.py          # dev server on :5000 (or $PORT)
 ```
 
 Runtime deps: `Flask`, `yt-dlp`, `ffmpeg` (on `PATH`). Python 3.10+.
-No test framework, linting, typechecking, or CI — zero config for those.
+Tests: `python -m pytest tests/ -v` (pytest, no extra setup). CI runs the same on push/PR via `.github/workflows/test.yml`.
 
 ## Structure
 
